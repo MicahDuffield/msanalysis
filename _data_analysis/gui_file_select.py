@@ -30,7 +30,3 @@ def file_selector(optional_path = None):
         filetypes=file_types
     )
     return file_path
-
-aaa = file_selector(("MasSpec Files", "*.mzXML"))
-
-aaa = file_selector()
