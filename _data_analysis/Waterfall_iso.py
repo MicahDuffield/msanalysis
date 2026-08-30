@@ -16,7 +16,16 @@ def average_around_scan(intensities, scan_number, window=50):
     upper = min(scan_number + window + 1, n_scans)
     return np.mean(intensities[lower:upper], axis=0)
  
- 
+
+#User specified variables 
+
+#M/Z range for plotting
+x_lim_lower = 80
+x_lim_upper = 90
+
+scan_number = 500    # scan (or scan-window center) to average around per file
+window = 30          # +/- scans to average
+y_offset_step = 50   # vertical spacing between stacked spectra -- tune to your data
 #
 # Select multiple mzXML files at once
 #
@@ -30,14 +39,7 @@ root.destroy()
  
 if not file_paths:
     raise SystemExit("No files selected.")
- 
-#
-# Settings
-#
-scan_number = 500     # scan (or scan-window center) to average around per file
-window = 30          # +/- scans to average
-y_offset_step = 50   # vertical spacing between stacked spectra -- tune to your data
- 
+  
 #
 # Plot
 #
@@ -61,7 +63,7 @@ for i, file_path in enumerate(file_paths):
 ax.set_xlabel("M/Z", fontsize=20, fontweight="bold", fontname="Arial")
 ax.set_ylabel("Intensity (offset, abs. units)", fontsize=20, fontweight="bold",
               fontname="Arial")
-ax.set_xlim(13, 110)  # adjust to your m/z range of interest
+ax.set_xlim(x_lim_lower, x_lim_upper)  # adjust to your m/z range of interest
 ax.tick_params(axis="both", which="major", direction="out", length=6,
                 width=2, bottom=True, left=True, top=False, right=False,
                 labelsize=14)
@@ -78,6 +80,6 @@ for spine in ax.spines.values():
 ax.set_yticks([])
  
 ax.legend(fontsize=9, loc="upper left", frameon=False, bbox_to_anchor=(1.02, 1))
-plt.xlim((80, 90))
+plt.xlim((x_lim_lower, x_lim_upper))
 plt.tight_layout()
 plt.show()

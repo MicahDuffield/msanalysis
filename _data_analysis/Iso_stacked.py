@@ -23,7 +23,10 @@ from scipy.signal import savgol_filter
 
 #
 # User specified variables
-#
+
+#time range for plotting (in minutes)
+x_lim_lower = 0
+x_lim_upper = 75
 
 # Users can specify their own path like the lines below
 # labview_file = "/home/james/Downloads/20200228_TP.csv"
@@ -42,7 +45,7 @@ mz, intensities, times = data["mz"], data["intensities"], data["times"]
 times = times / 60
 
 #
-# Get abundances
+# Get abundances of the M/Zs of interest
 #
 mzs = [20,85,17]
 abun = get_relative_abundance(mz, intensities, mzs)
@@ -82,7 +85,7 @@ for i, (ax, lab, color) in enumerate(zip(axis, labels, colors)):
         tick_label.set_fontweight("bold")
         tick_label.set_fontsize(18)
 axis[-1].set_xlabel("Time (mins)", fontsize=20, fontweight="bold",fontname="Arial")
-axis[-1].set_xlim(0, 75)
+axis[-1].set_xlim(x_lim_lower, x_lim_upper)
 fig.align_ylabels(axis)
 plt.tight_layout()
 plt.show()

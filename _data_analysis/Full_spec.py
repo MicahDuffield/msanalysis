@@ -31,10 +31,19 @@ def average_around_scan(intensities, scan_number, window=50):
  
 #
 # User specified scan numbers -- edit these directly to change what's plotted
-#
+
+#scan numbers to average around for plotting
 intended_scan_number = 100
 intended_scan_number_2 = 500
 window = 50
+
+#temperature limits for plotting
+x_lim_lower = 0
+x_lim_upper = 110
+
+#intensity limits for plotting
+y_lim_lower = 0
+y_lim_upper = 10
 
 mzXML_file = file_selector(("MasSpec Files", "*.mzXML"))
 
@@ -54,8 +63,8 @@ plt.figure(figsize=(8, 8))
 sns.set_style("whitegrid")
 plt.plot(mz, average_intensity_1, c="grey", label="Ar only" )
 plt.plot(mz, average_intensity_2+100, c="red", label="HF dose")
-plt.xlim((0,110))
-plt.ylim((0,10))
+plt.xlim((x_lim_lower, x_lim_upper))
+plt.ylim((y_lim_lower, y_lim_upper))
 plt.xlabel("M/Z", fontsize=28, fontweight="bold",fontname="Arial")
 plt.ylabel("Intensity (mV)", fontsize=28, fontweight="bold",fontname="Arial")
 plt.tick_params(axis="both", which="major", direction="out",length=6, width=2, bottom=True, left=True, top=False, right=False, labelsize=16)

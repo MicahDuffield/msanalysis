@@ -23,7 +23,10 @@ from scipy.signal import savgol_filter
 
 #
 # User specified variables
-#
+
+#temperature range for plotting (in degrees Celsius)
+x_lim_lower = 0
+x_lim_upper = 75
 
 # Users can specify their own path like the lines below
 # labview_file = "/home/james/Downloads/20200228_TP.csv"
@@ -66,13 +69,13 @@ intensities = intensities[subset]
 temp_interp = np.interp(times, df["time"], df["powder_bed_temp"])
 
 #
-# Get abundances
+# Get abundances of the M/Zs of interest
 #
 mzs = [85,17,20]
 abun = get_relative_abundance(mz, intensities, mzs)
 
 window_length = 9  # odd integer
-polyorder = 1       # polynomial order
+polyorder = 1      # polynomial order
  
 abun_smooth = [
     savgol_filter(trace, window_length=window_length, polyorder=polyorder)
@@ -109,7 +112,7 @@ for i, (ax, lab, color) in enumerate(zip(axis, labels, colors)):
         tick_label.set_fontweight("bold")
         tick_label.set_fontsize(18)
 axis[-1].set_xlabel("Temperature ($^o$C)", fontsize=20, fontweight="bold",fontname="Arial")
-axis[-1].set_xlim(25, 240)
+axis[-1].set_xlim(x_lim_lower, x_lim_upper)
 fig.align_ylabels(axis)
 plt.tight_layout()
 plt.show()
