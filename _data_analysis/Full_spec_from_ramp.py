@@ -32,22 +32,26 @@ def average_around_scan(intensities, scan_number, window=50):
     return np.mean(intensities[lower:upper], axis=0)
  
  
-#
-# User specified scan numbers -- edit these directly to change what's plotted
-#
+# User specified variables -- edit these directly to change what's plotted
+
+#scan numbers to average around for plotting
 intended_scan_number = 100
 intended_scan_number_2 = 500
 window = 50
 
-#
-# User specified variables
-#
+temp_value_lower = 25
+temp_value_upper = 160
 
-# Users can specify their own path like the lines below
-# labview_file = "/home/james/Downloads/20200228_TP.csv"
-# mzXML_file = "/home/james/Downloads/20200228_1175.mzXML"
-# labview_file = "20200612_TP.csv"
-# mzXML_file = "20200612_2735.mzXML"
+#temperature limits for plotting
+x_lim_lower = 0
+x_lim_upper = 110
+
+#intensity limits for plotting
+y_lim_lower = 0
+y_lim_upper = 10
+
+#offset for plotting the second spectrum
+offset = 0
 
 #first select the mzXML path
 mzXML_file = file_selector(("MasSpec Files", "*.mzXML"))
@@ -83,15 +87,8 @@ intensities = intensities[subset]
 #
 temp_interp = np.interp(times, df["time"], df["powder_bed_temp"])
 
-temp_value_lower = 25
-temp_value_upper = 160
-
 scan_number_lower = np.where((temp_interp >= temp_value_lower))[0][0]
 scan_number_upper = np.where((temp_interp <= temp_value_upper))[0][-1]
-
-scan_number_lower = scan_number_lower 
-scan_number_upper = scan_number_upper
-window = 49
 
 average_intensity_1 = average_around_scan(intensities, scan_number_lower, window=window)
 average_intensity_2 = average_around_scan(intensities, scan_number_upper, window=window)
@@ -102,9 +99,9 @@ average_intensity_2 = average_around_scan(intensities, scan_number_upper, window
 plt.figure(figsize=(8, 8))
 sns.set_style("whitegrid")
 plt.plot(mz, average_intensity_1, c="grey", label=f"{temp_value_lower} $^o$C") 
-plt.plot(mz, average_intensity_2, c="red", label=f"{temp_value_upper} $^o$C")
-plt.xlim((12,22))
-plt.ylim((0,350))
+plt.plot(mz, average_intensity_2+offset, c="red", label=f"{temp_value_upper} $^o$C")
+plt.xlim((x_lim_lower,x_lim_upper))
+plt.ylim((y_lim_lower,y_lim_upper))
 plt.xlabel("m/z", fontsize=28, fontweight="bold",fontname="Arial")
 plt.ylabel("Intensity (mV)", fontsize=28, fontweight="bold",fontname="Arial")
 plt.tick_params(axis="both", which="major", direction="out",length=6, width=2, bottom=True, left=True, top=False, right=False, labelsize=16)
