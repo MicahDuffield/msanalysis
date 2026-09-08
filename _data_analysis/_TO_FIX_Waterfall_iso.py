@@ -72,8 +72,8 @@ for i, file_path in enumerate(file_paths):
  
     ax.plot(mz, spectrum/local_max + offset, color=cmap(i), linewidth=1.5, label=label)
  
-ax.set_xlabel("M/Z", fontsize=20, fontweight="bold", fontname="Arial")
-ax.set_ylabel("Intensity (offset, abs. units)", fontsize=20, fontweight="bold",
+ax.set_xlabel(r"$\mathit{{m/z}}$", fontsize=20, fontweight="bold", fontname="Arial")
+ax.set_ylabel("Intesnity (offset, counts)", fontsize=20, fontweight="bold",
               fontname="Arial")
 ax.set_xlim(x_lim_lower, x_lim_upper)  # adjust to your m/z range of interest
 ax.tick_params(axis="both", which="major", direction="out", length=6,
