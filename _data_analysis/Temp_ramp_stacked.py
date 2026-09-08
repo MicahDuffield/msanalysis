@@ -28,12 +28,6 @@ from scipy.signal import savgol_filter
 x_lim_lower = 0
 x_lim_upper = 75
 
-# Users can specify their own path like the lines below
-# labview_file = "/home/james/Downloads/20200228_TP.csv"
-# mzXML_file = "/home/james/Downloads/20200228_1175.mzXML"
-# labview_file = "20200612_TP.csv"
-# mzXML_file = "20200612_2735.mzXML"
-
 #first select the mzXML path
 mzXML_file = file_selector(("MasSpec Files", "*.mzXML"))
 labview_file = file_selector(("CSV Files", "*.csv"))
@@ -64,10 +58,19 @@ times = times[subset]
 intensities = intensities[subset]
 
 #
-# Use timestamps from mzXML and Labview to interpolate temperature for each scan
+# User specified variables
 #
 temp_interp = np.interp(times, df["time"], df["powder_bed_temp"])
 
+#
+# Get abundances of the M/Zs of interest
+#
+mzs = [85,17,20]
+abun = get_relative_abundance(mz, intensities, mzs)
+
+window_length = 9  # odd integer
+polyorder = 1      # polynomial order
+ 
 abun_smooth = [
     savgol_filter(trace, window_length=window_length, polyorder=polyorder)
     for trace in abun
