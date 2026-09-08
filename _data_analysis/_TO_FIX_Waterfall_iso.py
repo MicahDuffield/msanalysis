@@ -1,3 +1,5 @@
+from logging import root
+
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import seaborn as sns
@@ -15,31 +17,40 @@ def average_around_scan(intensities, scan_number, window=50):
     lower = max(scan_number - window, 0)
     upper = min(scan_number + window + 1, n_scans)
     return np.mean(intensities[lower:upper], axis=0)
- 
 
-#User specified variables 
+# User specified variables 
 
-#M/Z range for plotting
-x_lim_lower = 80
-x_lim_upper = 90
+# M/Z range for plotting
+x_lim_lower = 82
+x_lim_upper = 88
 
-scan_number = 500    # scan (or scan-window center) to average around per file
-window = 30          # +/- scans to average
-y_offset_step = 50   # vertical spacing between stacked spectra -- tune to your data
+scan_number = 60    # scan (or scan-window center) to average around per file
+window = 30         # +/- scans to average
+y_offset_step = 1   # vertical spacing between stacked spectra -- tune to your data
+
+n_files = 11        # amount of files to be selected
+
 #
-# Select multiple mzXML files at once
+# Select multiple mzXML files individually
 #
+
 root = tk.Tk()
-root.withdraw()  # hide the empty root window
-file_paths = filedialog.askopenfilenames(
-    title="Select up to 12 mzXML files",
-    filetypes=[("MassSpec Files", "*.mzXML")]
-)
+root.withdraw()
+
+file_paths = []
+for i in range(n_files):
+    path = filedialog.askopenfilename(
+        title=f"Select file {i + 1} of {n_files} (in plot order)",
+        filetypes=[("MassSpec Files", "*.mzXML")]
+    )
+    if not path:
+        break  # user hit Cancel -- stop asking for more files
+    file_paths.append(path)
+ 
 root.destroy()
  
 if not file_paths:
     raise SystemExit("No files selected.")
-  
 #
 # Plot
 #
@@ -54,11 +65,14 @@ for i, file_path in enumerate(file_paths):
     mz, intensities = data["mz"], data["intensities"]
  
     spectrum = average_around_scan(intensities, scan_number, window=window)
+
+    mz_mask = (mz >= x_lim_lower) & (mz <= x_lim_upper)
+    local_max = np.max(spectrum[mz_mask])
  
     offset = i * y_offset_step
     label = file_path.split("/")[-1]  # just the filename, not full path
  
-    ax.plot(mz, spectrum + offset, color=cmap(i), linewidth=1.5, label=label)
+    ax.plot(mz, spectrum/local_max + offset, color=cmap(i), linewidth=1.5, label=label)
  
 ax.set_xlabel("M/Z", fontsize=20, fontweight="bold", fontname="Arial")
 ax.set_ylabel("Intensity (offset, abs. units)", fontsize=20, fontweight="bold",
@@ -78,8 +92,8 @@ for spine in ax.spines.values():
 # Since y-axis is now just "stacked/offset" rather than a real intensity
 # scale, it's common to hide the y-tick numbers in a waterfall plot
 ax.set_yticks([])
- 
-ax.legend(fontsize=9, loc="upper left", frameon=False, bbox_to_anchor=(1.02, 1))
+
 plt.xlim((x_lim_lower, x_lim_upper))
+plt.ylim((0, 10))
 plt.tight_layout()
 plt.show()
