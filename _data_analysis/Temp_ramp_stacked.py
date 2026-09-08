@@ -55,7 +55,7 @@ x_lim_upper = 400
 temp_interp = np.interp(times, df["time"], df["powder_bed_temp"])
 
 # Get abundances of the M/Zs of interest
-mzs = [85,17,82]
+mzs = [85,79,17]
 abun = get_relative_abundance(mz, intensities, mzs)
 
 window_length = 9  # odd integer
@@ -73,7 +73,7 @@ scale_value = 50
 #
 sns.set_style("whitegrid")
 
-mz_colors = {20: "tab:blue", 17: "purple", 85: "tab:red", 104: "tab:green", 82: "tab:orange"}
+mz_colors = {20: "tab:blue", 17: "purple", 85: "tab:red", 104: "tab:green", 79: "tab:orange"}
 colors = [mz_colors[mz] for mz in mzs]
 labels = [r"$\mathit{{m/z}}$ = {}".format(mz) for mz in mzs]
 
@@ -82,8 +82,8 @@ fig, axis=plt.subplots(len(mzs),1,figsize=(11,11),sharex=True, squeeze=False)
 axis = axis.flatten() 
 
 for i, (ax, lab, color) in enumerate(zip(axis, labels, colors)):
-    ax.plot(temp_interp, abun[i]/scale_value, color=color, linewidth=1, alpha=0.25, marker='o',linestyle='None', markersize=2)
-    ax.plot(temp_interp, abun_smooth[i]/scale_value, label=lab, color=color, linewidth=3)
+    ax.plot(temp_interp, abun[i], color=color, linewidth=1, alpha=0.25, marker='o',linestyle='None', markersize=2)
+    ax.plot(temp_interp, abun_smooth[i], label=lab, color=color, linewidth=3)
     # marker='o',linestyle='None', markersize=2
     ax.set_ylabel("Intesnity (counts)", fontsize=20, fontweight="bold",fontname="Arial")
     leg = ax.legend(fontsize=16, loc="upper right", frameon=False)
