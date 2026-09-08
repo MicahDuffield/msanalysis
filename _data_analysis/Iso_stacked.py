@@ -21,43 +21,33 @@ from gui_file_select import file_selector
 from matplotlib.ticker import FixedLocator
 from scipy.signal import savgol_filter
 
-#first select the mzXML path
-mzXML_file = file_selector(("MasSpec Files", "*.mzXML"))
-
-#
-# Read in mzXML
-#
-data = read_mzXML(mzXML_file)
-mz, intensities, times = data["mz"], data["intensities"], data["times"]
-times = times / 60
- 
-
 #
 # User specified variables
 #
-
 #time range for plotting (in minutes)
 x_lim_lower = 0
 x_lim_upper = 75
 
-#
+#first select the mzXML path
+mzXML_file = file_selector(("MasSpec Files", "*.mzXML"))
+
+# Read in mzXML
+data = read_mzXML(mzXML_file)
+mz, intensities, times = data["mz"], data["intensities"], data["times"]
+times = times / 60
+
 # Get abundances of the M/Zs of interest
-#
 mzs = [20,85,17]
 abun = get_relative_abundance(mz, intensities, mzs)
 
 window_length = 9  # odd integer
 polyorder = 1       # polynomial order
-
-#first select the mzXML path
-mzXML_file = file_selector(("MasSpec Files", "*.mzXML"))
  
 abun_smooth = [
     savgol_filter(trace, window_length=window_length, polyorder=polyorder)
     for trace in abun
 ]
 
-#
 # Plot
 #
 sns.set_style("whitegrid")

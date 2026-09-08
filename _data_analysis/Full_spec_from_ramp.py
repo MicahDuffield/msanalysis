@@ -31,9 +31,9 @@ def average_around_scan(intensities, scan_number, window=50):
     upper = min(scan_number + window + 1, n_scans)  # +1 so it's inclusive
     return np.mean(intensities[lower:upper], axis=0)
  
- 
-# User specified variables -- edit these directly to change what's plotted
-
+#
+# User specified variables 
+#
 #scan numbers to average around for plotting
 intended_scan_number = 100
 intended_scan_number_2 = 500
@@ -57,9 +57,7 @@ offset = 0
 mzXML_file = file_selector(("MasSpec Files", "*.mzXML"))
 labview_file = file_selector(("CSV Files", "*.csv"))
 
-#
 # Read CSV Data from LabView
-#
 cols = ["time", "block_temp", "powder_bed_temp", "Ar_heater", "probe_chamber", "probe_inlet", "probe_exhaust", "etchant mainifold", "block_T", "actual_flow", "pid_output"]
 #, "cold_cathode", "hot_cathode"
 
@@ -72,9 +70,7 @@ df = pd.read_csv(labview_file, names=cols, header=0).astype(float)
 df["time"] -= df["time"][0]
 last_lv_time = np.array(df["time"])[-1]
 
-#
 # Read in mzXML
-#
 data = read_mzXML(mzXML_file)
 mz, intensities, times = data["mz"], data["intensities"], data["times"]
 # Only go as far as LabView data (which we are assuming is always shut off after the mass spec)
@@ -82,9 +78,7 @@ subset = np.where(times <= last_lv_time)[0]
 times = times[subset]
 intensities = intensities[subset]
 
-#
 # Use timestamps from mzXML and Labview to interpolate temperature for each scan
-#
 temp_interp = np.interp(times, df["time"], df["powder_bed_temp"])
 
 scan_number_lower = np.where((temp_interp >= temp_value_lower))[0][0]
@@ -93,7 +87,7 @@ scan_number_upper = np.where((temp_interp <= temp_value_upper))[0][-1]
 average_intensity_1 = average_around_scan(intensities, scan_number_lower, window=window)
 average_intensity_2 = average_around_scan(intensities, scan_number_upper, window=window)
 
-#
+
 # Plot
 #
 plt.figure(figsize=(8, 8))

@@ -30,8 +30,8 @@ def average_around_scan(intensities, scan_number, window=50):
  
  
 #
-# User specified scan numbers -- edit these directly to change what's plotted
-
+# User specified variables
+#
 #scan numbers to average around for plotting
 intended_scan_number = 100
 intended_scan_number_2 = 500
@@ -47,16 +47,13 @@ y_lim_upper = 10
 
 mzXML_file = file_selector(("MasSpec Files", "*.mzXML"))
 
-#
 # Read in mzXML
-#
 data = read_mzXML(mzXML_file)
 mz, intensities, times = data["mz"], data["intensities"], data["times"]
 
 average_intensity_1 = average_around_scan(intensities, intended_scan_number, window=window)
 average_intensity_2 = average_around_scan(intensities, intended_scan_number_2, window=window)
 
-#
 # Plot
 #
 plt.figure(figsize=(8, 8))
