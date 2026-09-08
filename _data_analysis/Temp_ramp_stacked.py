@@ -21,9 +21,6 @@ from msanalysis.sample_data import get_mzXML_sample_path, get_csv_sample_path
 from gui_file_select import file_selector
 from scipy.signal import savgol_filter
 
-#
-# User specified variables
-
 #temperature range for plotting (in degrees Celsius)
 x_lim_lower = 0
 x_lim_upper = 75
@@ -32,9 +29,7 @@ x_lim_upper = 75
 mzXML_file = file_selector(("MasSpec Files", "*.mzXML"))
 labview_file = file_selector(("CSV Files", "*.csv"))
 
-#
 # Read CSV Data from LabView
-#
 cols = ["time", "block_temp", "powder_bed_temp", "Ar_heater", "probe_chamber", "probe_inlet", "probe_exhaust", "etchant mainifold", "block_T", "actual_flow", "pid_output", "cold_cathode", "hot_cathode"]
 #, "cold_cathode", "hot_cathode"
 
@@ -47,9 +42,7 @@ df = pd.read_csv(labview_file, names=cols, header=0).astype(float)
 df["time"] -= df["time"][0]
 last_lv_time = np.array(df["time"])[-1]
 
-#
 # Read in mzXML
-#
 data = read_mzXML(mzXML_file)
 mz, intensities, times = data["mz"], data["intensities"], data["times"]
 # Only go as far as LabView data (which we are assuming is always shut off after the mass spec)
@@ -62,9 +55,7 @@ intensities = intensities[subset]
 #
 temp_interp = np.interp(times, df["time"], df["powder_bed_temp"])
 
-#
 # Get abundances of the M/Zs of interest
-#
 mzs = [85,17,20]
 abun = get_relative_abundance(mz, intensities, mzs)
 
@@ -76,7 +67,7 @@ abun_smooth = [
     for trace in abun
 ]
 
-#
+
 # Plot
 #
 sns.set_style("whitegrid")

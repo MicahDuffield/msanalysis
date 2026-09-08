@@ -18,8 +18,9 @@ def average_around_scan(intensities, scan_number, window=50):
     upper = min(scan_number + window + 1, n_scans)
     return np.mean(intensities[lower:upper], axis=0)
 
+#
 # User specified variables 
-
+#
 # M/Z range for plotting
 x_lim_lower = 82
 x_lim_upper = 88
@@ -30,10 +31,7 @@ y_offset_step = 1   # vertical spacing between stacked spectra -- tune to your d
 
 n_files = 11        # amount of files to be selected
 
-#
 # Select multiple mzXML files individually
-#
-
 root = tk.Tk()
 root.withdraw()
 
@@ -51,7 +49,7 @@ root.destroy()
  
 if not file_paths:
     raise SystemExit("No files selected.")
-#
+
 # Plot
 #
 sns.set_style("whitegrid")
