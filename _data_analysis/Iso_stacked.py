@@ -21,6 +21,17 @@ from gui_file_select import file_selector
 from matplotlib.ticker import FixedLocator
 from scipy.signal import savgol_filter
 
+#first select the mzXML path
+mzXML_file = file_selector(("MasSpec Files", "*.mzXML"))
+
+#
+# Read in mzXML
+#
+data = read_mzXML(mzXML_file)
+mz, intensities, times = data["mz"], data["intensities"], data["times"]
+times = times / 60
+ 
+
 #
 # User specified variables
 #
@@ -40,13 +51,6 @@ polyorder = 1       # polynomial order
 
 #first select the mzXML path
 mzXML_file = file_selector(("MasSpec Files", "*.mzXML"))
-
-#
-# Read in mzXML
-#
-data = read_mzXML(mzXML_file)
-mz, intensities, times = data["mz"], data["intensities"], data["times"]
-times = times / 60
  
 abun_smooth = [
     savgol_filter(trace, window_length=window_length, polyorder=polyorder)
