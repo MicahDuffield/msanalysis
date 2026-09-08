@@ -23,10 +23,20 @@ from scipy.signal import savgol_filter
 
 #
 # User specified variables
+#
 
 #time range for plotting (in minutes)
 x_lim_lower = 0
 x_lim_upper = 75
+
+#
+# Get abundances of the M/Zs of interest
+#
+mzs = [20,85,17]
+abun = get_relative_abundance(mz, intensities, mzs)
+
+window_length = 9  # odd integer
+polyorder = 1       # polynomial order
 
 #first select the mzXML path
 mzXML_file = file_selector(("MasSpec Files", "*.mzXML"))
@@ -37,15 +47,6 @@ mzXML_file = file_selector(("MasSpec Files", "*.mzXML"))
 data = read_mzXML(mzXML_file)
 mz, intensities, times = data["mz"], data["intensities"], data["times"]
 times = times / 60
-
-#
-# Get abundances of the M/Zs of interest
-#
-mzs = [20,85,17]
-abun = get_relative_abundance(mz, intensities, mzs)
-
-window_length = 9  # odd integer
-polyorder = 1       # polynomial order
  
 abun_smooth = [
     savgol_filter(trace, window_length=window_length, polyorder=polyorder)
