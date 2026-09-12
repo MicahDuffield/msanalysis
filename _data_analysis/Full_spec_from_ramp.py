@@ -84,7 +84,6 @@ scan_number_upper = np.where((temp_interp <= temp_value_upper))[0][-1]
 average_intensity_1 = average_around_scan(intensities, scan_number_lower, window=window)
 average_intensity_2 = average_around_scan(intensities, scan_number_upper, window=window)
 
-
 # Plot
 #
 plt.figure(figsize=(8, 8))
