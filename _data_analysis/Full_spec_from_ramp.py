@@ -16,10 +16,8 @@ import pandas as pd
 
 
 from msanalysis.data_extraction import read_mzXML
-from msanalysis.data_processing import get_relative_abundance
-from msanalysis.sample_data import get_mzXML_sample_path, get_csv_sample_path
 from gui_file_select import file_selector
-from matplotlib.ticker import FixedLocator, MultipleLocator
+from matplotlib.ticker import MultipleLocator
 
 def average_around_scan(intensities, scan_number, window=50):
     """
