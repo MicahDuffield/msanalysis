@@ -24,11 +24,9 @@ def average_around_scan(intensities, scan_number, window=50):
 # M/Z range for plotting
 x_lim_lower = 84
 x_lim_upper = 86
-avg_lower = 84.5
-avg_upper = 85.5
 
-scan_number = 60  # scan (or scan-window center) to average around per file
-window = 9         # +/- scans to average
+scan_number = 600    # scan (or scan-window center) to average around per file
+window = 9        # +/- scans to average
 y_offset_step = 8  # vertical spacing between stacked spectra -- tune to your data
 
 n_files = 11        # amount of files to be selected
@@ -75,7 +73,7 @@ for i, file_path in enumerate(file_paths):
     ax.plot(mz, spectrum + offset, color=cmap(i), linewidth=1.5, label=label)
  
 ax.set_xlabel(r"$\mathit{{m/z}}$", fontsize=20, fontweight="bold", fontname="Arial")
-ax.set_ylabel("Intesnity (offset, counts)", fontsize=20, fontweight="bold",
+ax.set_ylabel("Intesnity (offset, Arb. Units)", fontsize=20, fontweight="bold",
               fontname="Arial")
 ax.set_xlim(x_lim_lower, x_lim_upper)  # adjust to your m/z range of interest
 ax.xaxis.set_major_locator(MultipleLocator(1))

@@ -26,7 +26,7 @@ mzXML_file = file_selector(("MasSpec Files", "*.mzXML"))
 labview_file = file_selector(("CSV Files", "*.csv"))
 
 # Read CSV Data from LabView
-cols = ["time", "block_temp", "powder_bed_temp", "Ar_heater", "probe_chamber", "probe_inlet", "probe_exhaust", "etchant mainifold", "block_T", "actual_flow", "pid_output", "cold_cathode", "hot_cathode"]
+cols = ["time", "block_temp", "powder_bed_temp", "Ar_heater", "probe_chamber", "probe_inlet", "probe_exhaust", "etchant mainifold", "block_T", "actual_flow", "pid_output"]
 #, "cold_cathode", "hot_cathode"
 
 # this reads the csv selected and does a few things
@@ -51,11 +51,11 @@ intensities = intensities[subset]
 #
 #temperature range for plotting (in degrees Celsius)
 x_lim_lower =25
-x_lim_upper = 400
+x_lim_upper = 200
 temp_interp = np.interp(times, df["time"], df["powder_bed_temp"])
 
 # Get abundances of the M/Zs of interest
-mzs = [85,79,17]
+mzs = [85,17]
 abun = get_relative_abundance(mz, intensities, mzs)
 
 window_length = 9  # odd integer
@@ -67,7 +67,7 @@ abun_smooth = [
 ]
 
 #scale value becuase the mzXML files gives in arb. units and to fix you need to give it the voltage from the tune table
-scale_value = 50
+scale_value = 1000
 
 # Plot
 #
@@ -82,11 +82,11 @@ fig, axis=plt.subplots(len(mzs),1,figsize=(11,11),sharex=True, squeeze=False)
 axis = axis.flatten() 
 
 for i, (ax, lab, color) in enumerate(zip(axis, labels, colors)):
-    ax.plot(temp_interp, abun[i], color=color, linewidth=1, alpha=0.25, marker='o',linestyle='None', markersize=2)
-    ax.plot(temp_interp, abun_smooth[i], label=lab, color=color, linewidth=3)
+    ax.plot(temp_interp, abun[i]/scale_value, color=color, linewidth=1, alpha=0.25, marker='o',linestyle='None', markersize=2)
+    ax.plot(temp_interp, abun_smooth[i]/scale_value, label=lab, color=color, linewidth=3)
     # marker='o',linestyle='None', markersize=2
-    ax.set_ylabel("Intesnity (counts)", fontsize=20, fontweight="bold",fontname="Arial")
-    leg = ax.legend(fontsize=16, loc="upper right", frameon=False)
+    ax.set_ylabel("Intesnity (Arb. Units)", fontsize=20, fontweight="bold",fontname="Arial")
+    leg = ax.legend(fontsize=16, loc="upper left", frameon=False)
     for line in leg.get_lines():
         line.set_linewidth(4)
     ax.grid(False)
