@@ -16,7 +16,7 @@ import pandas as pd
 
 
 from msanalysis.data_extraction import read_mzXML
-from gui_file_select import file_selector
+from _data_analysis.gui_file_select import file_selector
 from matplotlib.ticker import MultipleLocator
 
 def average_around_scan(intensities, scan_number, window=50):
@@ -29,9 +29,9 @@ def average_around_scan(intensities, scan_number, window=50):
     upper = min(scan_number + window + 1, n_scans)  # +1 so it's inclusive
     return np.mean(intensities[lower:upper], axis=0)
  
-#
+######
 # User specified variables 
-#
+######
 #temperature to average around for plotting
 temp_value_lower = 25
 temp_value_upper = 160

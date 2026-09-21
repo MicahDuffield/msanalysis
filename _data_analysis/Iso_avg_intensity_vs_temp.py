@@ -30,10 +30,9 @@ def extract_temperature(file_path):
         raise ValueError(f"Could not find a temperature in filename: {filename}")
     return float(match.group(1))
  
- 
-#
+######
 # User specified variables
-#
+######
 # M/Z range to sum over
 x_lim_lower = 84.5
 x_lim_upper = 85.5

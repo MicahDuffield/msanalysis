@@ -14,7 +14,7 @@ import numpy as np
 import argparse 
 
 from msanalysis.data_extraction import read_mzXML
-from gui_file_select import file_selector
+from _data_analysis.gui_file_select import file_selector
 from matplotlib.ticker import MultipleLocator
 
 def average_around_scan(intensities, scan_number, window=50):
@@ -28,9 +28,9 @@ def average_around_scan(intensities, scan_number, window=50):
     return np.mean(intensities[lower:upper], axis=0)
  
  
-#
+######
 # User specified variables
-#
+######
 #scan numbers to average around for plotting
 intended_scan_number = 100
 intended_scan_number_2 = 500

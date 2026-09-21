@@ -18,9 +18,9 @@ def average_around_scan(intensities, scan_number, window=50):
     upper = min(scan_number + window + 1, n_scans)
     return np.mean(intensities[lower:upper], axis=0)
 
-#
+######
 # User specified variables 
-#
+######
 # M/Z range for plotting
 x_lim_lower = 84
 x_lim_upper = 86
@@ -56,7 +56,7 @@ sns.set_style("whitegrid")
 fig, ax = plt.subplots(figsize=(9, 11))
  
 # Use a colormap so each file gets a distinct, ordered color
-cmap = cm.get_cmap('winter', len(file_paths))
+cmap = cm.get_cmap("winter", len(file_paths))
  
 for i, file_path in enumerate(file_paths):
     data = read_mzXML(file_path)
