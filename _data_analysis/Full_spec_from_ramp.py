@@ -16,7 +16,7 @@ import pandas as pd
 
 
 from msanalysis.data_extraction import read_mzXML
-from _data_analysis.gui_file_select import file_selector
+from gui_file_select import file_selector
 from matplotlib.ticker import MultipleLocator
 
 def average_around_scan(intensities, scan_number, window=50):

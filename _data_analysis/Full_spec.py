@@ -11,10 +11,9 @@ Ongoing updates (started): 8/17/2026
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
-import argparse 
 
 from msanalysis.data_extraction import read_mzXML
-from _data_analysis.gui_file_select import file_selector
+from gui_file_select import file_selector
 from matplotlib.ticker import MultipleLocator
 
 def average_around_scan(intensities, scan_number, window=50):

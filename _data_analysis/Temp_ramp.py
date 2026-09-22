@@ -49,12 +49,12 @@ intensities = intensities[subset]
 # User specified variables
 ######
 #temperature range for plotting (in degrees Celsius)
-x_lim_lower = 25
-x_lim_upper = 400
+x_lim_lower = 40
+x_lim_upper = 125
 temp_interp = np.interp(times, df["time"], df["powder_bed_temp"])
 
 # Get abundances of the M/Zs of interest
-mzs = [85]
+mzs = [85,131]
 abun = get_relative_abundance(mz, intensities, mzs)
 
 window_length = 9  # odd integer
@@ -65,40 +65,42 @@ abun_smooth = [
     for trace in abun
 ]
 
-#scale value becuase the mzXML files gives in arb. units and to fix you need to give it the voltage from the tune table
-scale_value = 1000
+#scale value becuase the mzXML files gives in arb. units 
+scale_value = 10
 
 # Plot
 #
 sns.set_style("whitegrid")
 
-mz_colors = {20: "tab:blue", 17: "purple", 85: "tab:red", 104: "tab:green", 79: "tab:orange"}
+mz_colors = {131: "tab:blue", 17: "purple", 85: "tab:red", 104: "tab:green", 79: "tab:orange"}
 colors = [mz_colors[mz] for mz in mzs]
 labels = [r"$\mathit{{m/z}}$ = {}".format(mz) for mz in mzs]
 
-fig, axis=plt.subplots(len(mzs),1,figsize=(11,11),sharex=True, squeeze=False)
+fig, ax = plt.subplots(figsize=(8, 8))
 
-axis = axis.flatten() 
-
-for i, (ax, lab, color) in enumerate(zip(axis, labels, colors)):
-    ax.plot(temp_interp, abun[i]/scale_value, color=color, linewidth=1, alpha=0.25, marker='o',linestyle='None', markersize=2)
+for i, (lab, color) in enumerate(zip(labels, colors)):
+    ax.plot(temp_interp, abun[i]/scale_value, color=color, linewidth=1, alpha=0.25,
+             marker='o', linestyle='None', markersize=2)
     ax.plot(temp_interp, abun_smooth[i]/scale_value, label=lab, color=color, linewidth=3)
-    # marker='o',linestyle='None', markersize=2
-    ax.set_ylabel("Intesnity (Arb. Units)", fontsize=20, fontweight="bold",fontname="Arial")
-    leg = ax.legend(fontsize=16, loc="upper left", frameon=False)
-    for line in leg.get_lines():
-        line.set_linewidth(4)
-    ax.grid(False)
-    for spine in ax.spines.values():
-        spine.set_linewidth(2)
-        spine.set_color("black")
-    ax.tick_params(axis="both", which="major", direction="out",length=6, width=2, bottom=True, left=True)
-    for tick_label in ax.get_xticklabels() + ax.get_yticklabels():
-        tick_label.set_fontweight("bold")
-        tick_label.set_fontsize(18)
-axis[-1].set_xlabel("Temperature ($^o$C)", fontsize=20, fontweight="bold",fontname="Arial")
-axis[-1].set_xlim(x_lim_lower, x_lim_upper)
-fig.align_ylabels(axis)
+
+ax.set_ylabel("Intensity (Arb. Units)", fontsize=20, fontweight="bold", fontname="Arial")
+ax.set_xlabel("Temperature ($^o$C)", fontsize=20, fontweight="bold", fontname="Arial")
+ax.set_xlim(x_lim_lower, x_lim_upper)
+
+leg = ax.legend(fontsize=16, loc="upper left", frameon=False)
+for line in leg.get_lines():
+    line.set_linewidth(4)
+
+ax.grid(False)
+for spine in ax.spines.values():
+    spine.set_linewidth(2)
+    spine.set_color("black")
+
+ax.tick_params(axis="both", which="major", direction="out", length=6, width=2, bottom=True, left=True)
+for tick_label in ax.get_xticklabels() + ax.get_yticklabels():
+    tick_label.set_fontweight("bold")
+    tick_label.set_fontsize(18)
+
 plt.tight_layout()
 plt.show()
 

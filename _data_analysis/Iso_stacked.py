@@ -9,22 +9,22 @@ Updated: 4/15/2020
 Edited by: Micah H. Duffield 
 Ongoing updates (started): 8/17/2026
 """
-import numpy as np
+
 import matplotlib.pyplot as plt
 import seaborn as sns
-import pandas as pd
+
 
 from msanalysis.data_extraction import read_mzXML
 from msanalysis.data_processing import get_relative_abundance
-from _data_analysis.gui_file_select import file_selector
+from gui_file_select import file_selector
 from scipy.signal import savgol_filter
 
 ######
 # User specified variables
 ######
 #time range for plotting (in minutes)
-x_lim_lower = 34
-x_lim_upper = 72
+x_lim_lower = 0
+x_lim_upper = 95
 
 #first select the mzXML path
 mzXML_file = file_selector(("MasSpec Files", "*.mzXML"))
@@ -35,7 +35,7 @@ mz, intensities, times = data["mz"], data["intensities"], data["times"]
 times = times / 60
 
 # Get abundances of the M/Zs of interest
-mzs = [20,85,17]
+mzs = [20,32,131]
 abun = get_relative_abundance(mz, intensities, mzs)
 
 window_length = 9  # odd integer
@@ -46,19 +46,23 @@ abun_smooth = [
     for trace in abun
 ]
 
+
+#scale value becuase the mzXML files gives in arb. units 
+scale_value = 100
+
 # Plot
 #
 sns.set_style("whitegrid")
 
-mz_colors = {20: "tab:blue", 17: "purple", 85: "tab:red", 79: "tab:orange"}
+mz_colors = {20: "blue", 32: "green", 131: "darkred"}
 colors = [mz_colors[mz] for mz in mzs]
 labels = [r"$\mathit{{m/z}}$ = {}".format(mz) for mz in mzs]
 
-fig, axis = plt.subplots(len(mzs), 1, figsize=(11, 11), sharex=True)
+fig, axis = plt.subplots(len(mzs), 1, figsize=(9, 9), sharex=True)
 
 for i, (ax, lab, color) in enumerate(zip(axis, labels, colors)):
-    ax.plot(times, abun[i], color=color, linewidth=1, alpha=0.25, marker='o',linestyle='None', markersize=2)
-    ax.plot(times, abun_smooth[i], label=lab, color=color, linewidth=3)
+    ax.plot(times, abun[i]/scale_value, color=color, linewidth=1, alpha=0.25, marker='o',linestyle='None', markersize=1)
+    ax.plot(times, abun_smooth[i]/scale_value, label=lab, color=color, linewidth=3)
     ax.set_ylabel("Intesnity (counts)", fontsize=20, fontweight="bold",fontname="Arial")
     leg = ax.legend(fontsize=16, loc="upper right", frameon=False)
     for line in leg.get_lines():
