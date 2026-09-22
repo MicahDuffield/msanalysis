@@ -16,10 +16,8 @@ import pandas as pd
 
 
 from msanalysis.data_extraction import read_mzXML
-from msanalysis.data_processing import get_relative_abundance
-from msanalysis.sample_data import get_mzXML_sample_path, get_csv_sample_path
 from gui_file_select import file_selector
-from matplotlib.ticker import FixedLocator, MultipleLocator
+from matplotlib.ticker import MultipleLocator
 
 def average_around_scan(intensities, scan_number, window=50):
     """
@@ -31,24 +29,23 @@ def average_around_scan(intensities, scan_number, window=50):
     upper = min(scan_number + window + 1, n_scans)  # +1 so it's inclusive
     return np.mean(intensities[lower:upper], axis=0)
  
-#
+######
 # User specified variables 
-#
-#scan numbers to average around for plotting
-intended_scan_number = 100
-intended_scan_number_2 = 500
-window = 50
-
+######
+#temperature to average around for plotting
 temp_value_lower = 25
 temp_value_upper = 160
 
+# number of scans to average around the specified temperature
+window = 50 
+
 #temperature limits for plotting
-x_lim_lower = 0
-x_lim_upper = 110
+x_lim_lower = 78
+x_lim_upper = 92
 
 #intensity limits for plotting
 y_lim_lower = 0
-y_lim_upper = 10
+y_lim_upper = 250
 
 #offset for plotting the second spectrum
 offset = 0
@@ -81,25 +78,24 @@ intensities = intensities[subset]
 # Use timestamps from mzXML and Labview to interpolate temperature for each scan
 temp_interp = np.interp(times, df["time"], df["powder_bed_temp"])
 
-scan_number_lower = np.where((temp_interp >= temp_value_lower))[0][0]
+scan_number_lower = 50
 scan_number_upper = np.where((temp_interp <= temp_value_upper))[0][-1]
 
 average_intensity_1 = average_around_scan(intensities, scan_number_lower, window=window)
 average_intensity_2 = average_around_scan(intensities, scan_number_upper, window=window)
 
-
 # Plot
 #
 plt.figure(figsize=(8, 8))
 sns.set_style("whitegrid")
-plt.plot(mz, average_intensity_1, c="grey", label=f"{temp_value_lower} $^o$C") 
-plt.plot(mz, average_intensity_2+offset, c="red", label=f"{temp_value_upper} $^o$C")
+plt.plot(mz, average_intensity_1, c="grey", label=f"Ar dose @ {temp_value_lower} $^o$C") 
+plt.plot(mz, average_intensity_2+offset, c="red", label=f"HF dose @ {temp_value_upper} $^o$C")
 plt.xlim((x_lim_lower,x_lim_upper))
 plt.ylim((y_lim_lower,y_lim_upper))
 plt.xlabel(r"$\mathit{{m/z}}$", fontsize=28, fontweight="bold",fontname="Arial")
 plt.ylabel("Intensity (mV)", fontsize=28, fontweight="bold",fontname="Arial")
 plt.tick_params(axis="both", which="major", direction="out",length=6, width=2, bottom=True, left=True, top=False, right=False, labelsize=16)
-plt.gca().xaxis.set_minor_locator(MultipleLocator(2))
+plt.gca().xaxis.set_minor_locator(MultipleLocator(1))
 plt.tick_params(axis="x", which="minor", length=6, width=2.5, bottom=True, top=False)
 plt.grid(False)
 for spine in plt.gca().spines.values():

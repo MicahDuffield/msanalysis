@@ -11,12 +11,10 @@ Ongoing updates (started): 8/17/2026
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
-import argparse 
 
 from msanalysis.data_extraction import read_mzXML
-from msanalysis.sample_data import get_mzXML_sample_path
 from gui_file_select import file_selector
-from matplotlib.ticker import FixedLocator, MultipleLocator
+from matplotlib.ticker import MultipleLocator
 
 def average_around_scan(intensities, scan_number, window=50):
     """
@@ -29,9 +27,9 @@ def average_around_scan(intensities, scan_number, window=50):
     return np.mean(intensities[lower:upper], axis=0)
  
  
-#
+######
 # User specified variables
-#
+######
 #scan numbers to average around for plotting
 intended_scan_number = 100
 intended_scan_number_2 = 500
@@ -56,7 +54,7 @@ average_intensity_2 = average_around_scan(intensities, intended_scan_number_2, w
 
 # Plot
 #
-plt.figure(figsize=(8, 8))
+plt.figure(figsize=(11, 11))
 sns.set_style("whitegrid")
 plt.plot(mz, average_intensity_1, c="grey", label="Ar only" )
 plt.plot(mz, average_intensity_2+100, c="red", label="HF dose")

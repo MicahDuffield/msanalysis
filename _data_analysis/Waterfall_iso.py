@@ -18,16 +18,16 @@ def average_around_scan(intensities, scan_number, window=50):
     upper = min(scan_number + window + 1, n_scans)
     return np.mean(intensities[lower:upper], axis=0)
 
-#
+######
 # User specified variables 
-#
+######
 # M/Z range for plotting
-x_lim_lower = 82
-x_lim_upper = 88
+x_lim_lower = 84
+x_lim_upper = 86
 
-scan_number = 60    # scan (or scan-window center) to average around per file
-window = 30         # +/- scans to average
-y_offset_step = 1   # vertical spacing between stacked spectra -- tune to your data
+scan_number = 600    # scan (or scan-window center) to average around per file
+window = 9        # +/- scans to average
+y_offset_step = 8  # vertical spacing between stacked spectra -- tune to your data
 
 n_files = 11        # amount of files to be selected
 
@@ -56,7 +56,7 @@ sns.set_style("whitegrid")
 fig, ax = plt.subplots(figsize=(9, 11))
  
 # Use a colormap so each file gets a distinct, ordered color
-cmap = cm.get_cmap("viridis", len(file_paths))
+cmap = cm.get_cmap("winter", len(file_paths))
  
 for i, file_path in enumerate(file_paths):
     data = read_mzXML(file_path)
@@ -70,17 +70,18 @@ for i, file_path in enumerate(file_paths):
     offset = i * y_offset_step
     label = file_path.split("/")[-1]  # just the filename, not full path
  
-    ax.plot(mz, spectrum/local_max + offset, color=cmap(i), linewidth=1.5, label=label)
+    ax.plot(mz, spectrum + offset, color=cmap(i), linewidth=1.5, label=label)
  
 ax.set_xlabel(r"$\mathit{{m/z}}$", fontsize=20, fontweight="bold", fontname="Arial")
-ax.set_ylabel("Intesnity (offset, counts)", fontsize=20, fontweight="bold",
+ax.set_ylabel("Intesnity (offset, Arb. Units)", fontsize=20, fontweight="bold",
               fontname="Arial")
 ax.set_xlim(x_lim_lower, x_lim_upper)  # adjust to your m/z range of interest
+ax.xaxis.set_major_locator(MultipleLocator(1))
 ax.tick_params(axis="both", which="major", direction="out", length=6,
                 width=2, bottom=True, left=True, top=False, right=False,
                 labelsize=14)
-ax.xaxis.set_minor_locator(MultipleLocator(2))
-ax.tick_params(axis="x", which="minor", length=4, width=1.5, bottom=True)
+#ax.xaxis.set_minor_locator(MultipleLocator(0.25))
+#ax.tick_params(axis="x", which="minor", length=4, width=1.5, bottom=True)
 ax.grid(False)
  
 for spine in ax.spines.values():
@@ -92,6 +93,6 @@ for spine in ax.spines.values():
 ax.set_yticks([])
 
 plt.xlim((x_lim_lower, x_lim_upper))
-plt.ylim((0, 10))
+plt.ylim((0, len(file_paths) * y_offset_step + 2))
 plt.tight_layout()
 plt.show()
